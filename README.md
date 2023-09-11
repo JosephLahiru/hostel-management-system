@@ -1,2 +1,2 @@
 # hostel-management-system
-Hostel Management System (HMS)
+## Hostel Management System (HMS)

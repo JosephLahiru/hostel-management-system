@@ -1,2 +1,1 @@
-# hostel-management-system
-## Hostel Management System (HMS)
+# ADBMS - Hostel Management System

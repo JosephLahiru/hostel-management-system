@@ -1,7 +1,15 @@
 import React from 'react';
-import Link from 'next/link';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+} from '@mui/material';
 
-// dummy data for monthly report
 const dummyMonthlyReports = [
   {
     month: 'January 2023',
@@ -13,7 +21,6 @@ const dummyMonthlyReports = [
     totalDamages: 15,
     totalResolved: 10,
   },
-  
 ];
 
 const dummyDailyReports = [
@@ -31,44 +38,57 @@ const dummyDailyReports = [
     description: 'Bulb not working',
     status: 'Resolved',
   },
-  
 ];
 
 function MonthlyReports() {
   return (
-    <div>
-      <h1>Monthly Report</h1>
-
-      
+    <Paper
+      sx={{
+        margin: '10px',
+        overflow: 'hidden',
+        padding: '10px',
+      }}
+    >
+      <Typography variant="h5" gutterBottom>
+        Monthly Report
+      </Typography>
       <div>
-        <p>Month: {dummyMonthlyReports[0].month}</p>
-        <p>Total Damages: {dummyMonthlyReports[0].totalDamages}</p>
-        <p>Total Resolved: {dummyMonthlyReports[0].totalResolved}</p>
+        <Typography variant="body1">
+          Month: {dummyMonthlyReports[0].month}
+        </Typography>
+        <Typography variant="body1">
+          Total Damages: {dummyMonthlyReports[0].totalDamages}
+        </Typography>
+        <Typography variant="body1">
+          Total Resolved: {dummyMonthlyReports[0].totalResolved}
+        </Typography>
       </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Item ID</th>
-            <th>Item Type</th>
-            <th>Room Number</th>
-            <th>Description</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dummyDailyReports.map((report, index) => (
-            <tr key={index}>
-              <td>{report.damaged_item_id}</td>
-              <td>{report.damaged_item_type}</td>
-              <td>{report.room_number}</td>
-              <td>{report.description}</td>
-              <td>{report.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <hr style={{ margin: '10px 0' }} />
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Item ID</TableCell>
+              <TableCell>Item Type</TableCell>
+              <TableCell>Room Number</TableCell>
+              <TableCell>Description</TableCell>
+              <TableCell>Status</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {dummyDailyReports.map((report, index) => (
+              <TableRow key={index}>
+                <TableCell>{report.damaged_item_id}</TableCell>
+                <TableCell>{report.damaged_item_type}</TableCell>
+                <TableCell>{report.room_number}</TableCell>
+                <TableCell>{report.description}</TableCell>
+                <TableCell>{report.status}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 }
 

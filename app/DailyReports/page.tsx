@@ -1,7 +1,24 @@
 import React from 'react';
-import Link from 'next/link';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+} from '@mui/material';
 
-// dummy data for Daily report
+
+const columns = [
+  { field: 'damaged_item_id', headerName: 'Item ID' },
+  { field: 'damaged_item_type', headerName: 'Item Type' },
+  { field: 'room_number', headerName: 'Room Number' },
+  { field: 'description', headerName: 'Description' },
+  { field: 'status', headerName: 'Status' },
+];
+
 const dummyReports = [
   {
     damaged_item_id: 1,
@@ -20,35 +37,39 @@ const dummyReports = [
 ];
 
 function DailyReports() {
-  // Get the current date
-  const currentDate = new Date().toLocaleDateString();
-
   return (
-    <div>
-      <h1>Daily Report - {currentDate}</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Item ID</th>
-            <th>Item Type</th>
-            <th>Room Number</th>
-            <th>Description</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dummyReports.map((report) => (
-            <tr key={report.damaged_item_id}>
-              <td>{report.damaged_item_id}</td>
-              <td>{report.damaged_item_type}</td>
-              <td>{report.room_number}</td>
-              <td>{report.description}</td>
-              <td>{report.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Paper
+      sx={{
+        margin: "10px",
+        overflow: "hidden",
+        padding: "10px",
+      }}
+    >
+      <Typography variant="h5" gutterBottom>
+          Daily Report
+        </Typography>
+        <hr style={{ margin: "10px 0" }} />
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell key={column.field}>{column.headerName}</TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {dummyReports.map((report) => (
+              <TableRow key={report.damaged_item_id}>
+                {columns.map((column) => (
+                  <TableCell key={column.field}>{report[column.field as keyof typeof report]}</TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 }
 

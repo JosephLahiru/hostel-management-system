@@ -1,8 +1,25 @@
 "use client";
+import React, { useEffect, useState } from 'react';
 import Html5QrcodePlugin, { Html5QrcodePluginProps } from './Html5QrcodePlugin'; // assuming Html5QrcodePlugin is in the same directory
 
-const App: React.FC<Html5QrcodePluginProps> = (props) => {
+const QRScanner: React.FC<Html5QrcodePluginProps> = (props) => {
+    const useWindowDimensions = () => {
+        const [windowDimensions, setWindowDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
 
+        useEffect(() => {
+            const handleResize = () => {
+                setWindowDimensions({ width: window.innerWidth, height: window.innerHeight });
+            };
+
+            window.addEventListener("resize", handleResize);
+            return () => window.removeEventListener("resize", handleResize);
+        }, []);
+
+        return windowDimensions;
+    };
+
+
+    const { width, height } = useWindowDimensions();
     const onNewScanResult = (decodedText: string, decodedResult: any) => {
         // Check if the decoded text is a valid URL
         try {
@@ -16,10 +33,11 @@ const App: React.FC<Html5QrcodePluginProps> = (props) => {
     };
 
     return (
-        <div className="App">
+        <div style={{ width, height }}>
             <Html5QrcodePlugin
-                fps={10}
-                qrbox={250}
+                fps={30}
+                qrbox={{ width: 250, height: 250 }}
+                aspectRatio={1}
                 disableFlip={false}
                 qrCodeSuccessCallback={onNewScanResult}
             />
@@ -27,4 +45,4 @@ const App: React.FC<Html5QrcodePluginProps> = (props) => {
     );
 };
 
-export default App;
+export default QRScanner;

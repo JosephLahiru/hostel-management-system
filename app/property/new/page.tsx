@@ -24,22 +24,39 @@ function AddProperty() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+  
+    // first, get the token
+    const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: process.env.NEXT_PUBLIC_USERNAME,
+        password: process.env.NEXT_PUBLIC_PASSWORD,
+      }),
+    });
+  
+    const authData = await authRes.json();
 
+    const token = authData.jwt;
+  
     const res = await fetch('https://hms.mtron.biz/api/property', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + btoa(process.env.NEXT_PUBLIC_USERNAME + ':' + process.env.NEXT_PUBLIC_PASSWORD)
+        'Authorization': 'Bearer ' + token,
       },
       body: JSON.stringify(property),
     });
-
+  
     if (res.ok) {
         console.log("Added Data");
     } else {
       alert('Failed to add property');
     }
   };
+  
 
   return (
     <Container maxWidth="sm">
@@ -48,49 +65,51 @@ function AddProperty() {
           Add Property
         </Typography>
       </Box>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField 
-            label="Property ID" 
-            variant="outlined" 
-            name="prop_id" 
-            value={property.prop_id} 
-            onChange={handleInputChange} 
-            placeholder="Enter property ID"
-            required 
-            fullWidth
-          />
+      <form onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField 
+              label="Property ID" 
+              variant="outlined" 
+              name="prop_id" 
+              value={property.prop_id} 
+              onChange={handleInputChange} 
+              placeholder="Enter property ID"
+              required 
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField 
+              label="Property Name" 
+              variant="outlined" 
+              name="prop_name" 
+              value={property.prop_name} 
+              onChange={handleInputChange} 
+              placeholder="Enter property name"
+              required 
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField 
+              label="Property Status" 
+              variant="outlined" 
+              name="status" 
+              value={property.status} 
+              onChange={handleInputChange} 
+              placeholder="Enter property status"
+              required 
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button type="submit" variant="contained" fullWidth>
+              Add Property
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <TextField 
-            label="Property Name" 
-            variant="outlined" 
-            name="prop_name" 
-            value={property.prop_name} 
-            onChange={handleInputChange} 
-            placeholder="Enter property name"
-            required 
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField 
-            label="Property Status" 
-            variant="outlined" 
-            name="status" 
-            value={property.status} 
-            onChange={handleInputChange} 
-            placeholder="Enter property status"
-            required 
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button type="submit" variant="contained" fullWidth>
-            Add Property
-          </Button>
-        </Grid>
-      </Grid>
+      </form>
     </Container>
   );
 }

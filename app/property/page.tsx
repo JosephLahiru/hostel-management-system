@@ -16,17 +16,37 @@ function PropertyPage() {
 
   useEffect(() => {
     async function fetchProperties() {
-      const res = await fetch('https://hms.mtron.biz/api/property', {
+      const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+        method: 'POST',
         headers: {
-          'Authorization': 'Basic ' + btoa(process.env.NEXT_PUBLIC_USERNAME + ':' + process.env.NEXT_PUBLIC_PASSWORD)
-        }
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: process.env.NEXT_PUBLIC_USERNAME,
+          password: process.env.NEXT_PUBLIC_PASSWORD,
+        }),
       });
+  
+      const authData = await authRes.json();
+
+      const token = authData.jwt;
+  
+      const res = await fetch('https://hms.mtron.biz/api/property', {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+        },
+      });
+  
       const data: Property[] = await res.json();
+
       setProperties(data);
       setLoading(false);
     }
+  
     fetchProperties();
   }, []);
+  
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);

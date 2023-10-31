@@ -6,7 +6,7 @@ const qrcodeRegionId = "html5qr-code-full-region";
 
 export interface Html5QrcodePluginProps {
     fps?: number;
-    qrbox?: number;
+    qrbox?: { width: number; height: number; };
     aspectRatio?: number;
     disableFlip?: boolean;
     verbose?: boolean;
@@ -56,8 +56,10 @@ const Html5QrcodePlugin: React.FC<Html5QrcodePluginProps> = (props) => {
     }, []);
 
     return (
-        <div id={qrcodeRegionId} />
+        //make height 100% match for display size with vh
+        <div id={qrcodeRegionId} style={{height: "100vh"}}/>
     );
 };
 
 export default Html5QrcodePlugin;
+

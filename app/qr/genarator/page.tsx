@@ -110,7 +110,7 @@ const Generate: React.FC = () => {
                                 <TableCell>{row.prop_name}</TableCell>
                                 <TableCell>{row.status}</TableCell>
                                 <TableCell>
-                                    <QRCode value={`http://localhost:3000/complaint/${row.prop_id}`} size={100}/>
+                                    <QRCode value={`http://localhost:3000/complaint?itemcode=${row.prop_id}`} size={100}/>
                                 </TableCell>
                             </TableRow>
                         ))}

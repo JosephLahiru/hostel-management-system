@@ -1,8 +1,20 @@
 // generate.tsx
 "use client";
-import { useEffect, useState, ChangeEvent } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, TablePagination } from '@mui/material';
+import React, { useEffect, useState, ChangeEvent } from 'react';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
+    TextField,
+    TablePagination,
+    Typography
+} from '@mui/material';
 import QRCode from 'react-qr-code';
+import Container from "@mui/material/Container";
 
 interface PropertyData {
     id: number;
@@ -61,17 +73,23 @@ const Generate: React.FC = () => {
     }, []);
 
     const filteredData = data.filter((row) =>
-        row.prop_name.toLowerCase().includes(search.toLowerCase())
+        row.prop_name.toLowerCase().includes(search.toLowerCase()) ||
+        row.id.toString().includes(search) ||
+        row.prop_id.toLowerCase().includes(search.toLowerCase())
     );
 
     return (
-        <>
-            <h1>Property Data</h1>
+        <Container maxWidth="lg" style={{ marginTop: '2rem' }}>
+            <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                Item QR Generator
+            </Typography>
             <TextField
                 label="Search Properties"
                 variant="outlined"
                 value={search}
                 onChange={handleSearch}
+                style={{ marginBottom: '1rem'} }
+                sx={{ marginLeft: 'auto' }}
             />
             <TableContainer component={Paper}>
                 <Table aria-label="simple table">
@@ -92,7 +110,7 @@ const Generate: React.FC = () => {
                                 <TableCell>{row.prop_name}</TableCell>
                                 <TableCell>{row.status}</TableCell>
                                 <TableCell>
-                                    <QRCode value={`http://localhost:3000/complaint/${row.prop_id}`} />
+                                    <QRCode value={`http://localhost:3000/complaint/${row.prop_id}`} size={100}/>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -108,7 +126,7 @@ const Generate: React.FC = () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </TableContainer>
-        </>
+        </Container>
     );
 }
 export default Generate;

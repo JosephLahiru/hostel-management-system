@@ -1,7 +1,12 @@
 "use client";
 import React, {useEffect, useState} from 'react';
-import {Button, TextField, Container, Box, Grid, Typography, Paper} from '@mui/material';
+import {Button, TextField, Container, Box, Grid, Typography, Paper, Select, MenuItem, FormControl, InputLabel} from '@mui/material';
 import { useSearchParams } from 'next/navigation';
+
+interface Student {
+    regNumber: string;
+    roomNumber: string;
+}
 const ComplaintForm = () => {
     const searchParams = useSearchParams();
     const [description, setDescription] = useState('');
@@ -9,12 +14,45 @@ const ComplaintForm = () => {
     const [itemCode, setItemCode] = useState('');
     const [roomNo, setRoomNo] = useState('');
     const [stuNo, setStuNo] = useState('');
+    const [studentRegNo, setStudentRegNo] = useState([]);
 
     useEffect(() => {
         if(searchParams.get('itemcode')){
             setItemCode(searchParams.get('itemcode')||'');
+            const fetchStudents = async () => {
+                const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: process.env.NEXT_PUBLIC_USERNAME,
+                        password: process.env.NEXT_PUBLIC_PASSWORD,
+                    }),
+                });
+
+                const authData = await authRes.json();
+
+                const token = authData.jwt;
+
+                const res = await fetch(`https://hms.mtron.biz/api/studentRoom/${itemCode}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                    },
+                });
+
+                const studentData = await res.json();
+                if(studentData) {
+                    const regNumbers = studentData.map((item: Student) => item.regNumber);
+                    console.log(regNumbers);
+                    setStudentRegNo(regNumbers);
+                    setRoomNo(studentData[0]?.roomNumber || '');
+                }
+            };
+            fetchStudents();
         }
-    }, []);
+    }, [itemCode]);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -117,17 +155,33 @@ const ComplaintForm = () => {
                                 disabled
                             />
                         </Grid>
+                        {/*<Grid item xs={12}>*/}
+                        {/*    <TextField*/}
+                        {/*        label="Student No"*/}
+                        {/*        value={stuNo}*/}
+                        {/*        onChange={(e) => setStuNo(e.target.value)}*/}
+                        {/*        fullWidth*/}
+                        {/*        margin="normal"*/}
+                        {/*        variant="outlined"*/}
+                        {/*        helperText="Please enter the Student Number"*/}
+                        {/*        required*/}
+                        {/*    />*/}
+                        {/*</Grid>*/}
                         <Grid item xs={12}>
-                            <TextField
-                                label="Student No"
-                                value={stuNo}
-                                onChange={(e) => setStuNo(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the Student Number"
-                                required
-                            />
+                            <FormControl variant="outlined" fullWidth margin="normal" required>
+                                <InputLabel id="studentNo-label">Student No</InputLabel>
+                                <Select
+                                    labelId="studentNo-label"
+                                    id="studentNo"
+                                    value={stuNo}
+                                    onChange={(e) => setStuNo(e.target.value)}
+                                    label="Student No"
+                                >
+                                    {studentRegNo.map((studentReg, index) => (
+                                        <MenuItem key={index} value={studentReg}>{studentReg}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid item xs={12}>
                             <Button type="submit" variant="contained" color="primary" fullWidth>

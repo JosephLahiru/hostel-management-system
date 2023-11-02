@@ -1,198 +1,150 @@
 "use client";
-import React, {useEffect, useState} from 'react';
-import {Button, TextField, Container, Box, Grid, Typography, Paper, Select, MenuItem, FormControl, InputLabel} from '@mui/material';
-import { useSearchParams } from 'next/navigation';
+import React, { useEffect, useState, ChangeEvent } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Typography, TextField, TableFooter, TablePagination, Grid} from '@mui/material';
 
-interface Student {
-    regNumber: string;
-    roomNumber: string;
+interface ComplaintData {
+    id: number;
+    item_code: string;
+    description: string;
+    room_no: number;
+    stu_no: string;
+    image_url: string | null;
+    status: string | null;
+    createdAt: string | null;
 }
-const ComplaintForm = () => {
-    const searchParams = useSearchParams();
-    const [description, setDescription] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
-    const [itemCode, setItemCode] = useState('');
-    const [roomNo, setRoomNo] = useState('');
-    const [stuNo, setStuNo] = useState('');
-    const [studentRegNo, setStudentRegNo] = useState([]);
+
+const ShowComplaints: React.FC = () => {
+    const [data, setData] = useState<ComplaintData[]>([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
-        if(searchParams.get('itemcode')){
-            setItemCode(searchParams.get('itemcode')||'');
-            const fetchStudents = async () => {
-                const authRes = await fetch('https://hms.mtron.biz/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: process.env.NEXT_PUBLIC_USERNAME,
-                        password: process.env.NEXT_PUBLIC_PASSWORD,
-                    }),
-                });
+        const fetchComplaints = async () => {
+            const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: process.env.NEXT_PUBLIC_USERNAME,
+                    password: process.env.NEXT_PUBLIC_PASSWORD,
+                }),
+            });
 
-                const authData = await authRes.json();
+            const authData = await authRes.json();
+            const token = authData.jwt;
 
-                const token = authData.jwt;
+            const res = await fetch('https://hms.mtron.biz/api/complaint', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                },
+            });
 
-                const res = await fetch(`https://hms.mtron.biz/api/studentRoom/${itemCode}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
-                    },
-                });
-
-                const studentData = await res.json();
-                if(studentData) {
-                    const regNumbers = studentData.map((item: Student) => item.regNumber);
-                    console.log(regNumbers);
-                    setStudentRegNo(regNumbers);
-                    setRoomNo(studentData[0]?.roomNumber || '');
-                }
-            };
-            fetchStudents();
-        }
-    }, [itemCode]);
-
-    const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
-
-        const authRes = await fetch('https://hms.mtron.biz/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: process.env.NEXT_PUBLIC_USERNAME,
-                password: process.env.NEXT_PUBLIC_PASSWORD,
-            }),
-        });
-
-        const authData = await authRes.json();
-
-        const token = authData.jwt;
-
-        const data = {
-            item_code: itemCode,
-            description: description,
-            room_no: roomNo,
-            stu_no: stuNo,
-            image_url: imageUrl
+            const complaintData: ComplaintData[] = await res.json();
+            setData(complaintData);
         };
 
-        const response = await fetch('https://hms.mtron.biz/api/complaint', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
+        fetchComplaints();
+    }, []);
 
-            },
-            body: JSON.stringify(data),
-        });
+    const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+        setSearch(event.target.value);
+    };
 
-        if (response.ok) {
-            console.log('complaint submitted successfully');
-        } else {
-            console.error('Failed to submit complaint');
-        }
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
     };
 
     return (
-        <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
-            <Paper style={{ padding: '1rem' }}>
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
+            <Grid item xs={12}>
                 <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
-                    Complaint Form
+                    Complaints
                 </Typography>
-                <form onSubmit={handleSubmit} noValidate autoComplete="off">
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the description"
-                                required
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Image URL"
-                                value={imageUrl}
-                                onChange={(e) => setImageUrl(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the Image URL"
-                                required
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Item Code"
-                                value={itemCode}
-                                onChange={(e) => setItemCode(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the Item Code"
-                                required
-                                disabled
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Room No"
-                                value={roomNo}
-                                onChange={(e) => setRoomNo(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the Room Number"
-                                required
-                                disabled
-                            />
-                        </Grid>
-                        {/*<Grid item xs={12}>*/}
-                        {/*    <TextField*/}
-                        {/*        label="Student No"*/}
-                        {/*        value={stuNo}*/}
-                        {/*        onChange={(e) => setStuNo(e.target.value)}*/}
-                        {/*        fullWidth*/}
-                        {/*        margin="normal"*/}
-                        {/*        variant="outlined"*/}
-                        {/*        helperText="Please enter the Student Number"*/}
-                        {/*        required*/}
-                        {/*    />*/}
-                        {/*</Grid>*/}
-                        <Grid item xs={12}>
-                            <FormControl variant="outlined" fullWidth margin="normal" required>
-                                <InputLabel id="studentNo-label">Student No</InputLabel>
-                                <Select
-                                    labelId="studentNo-label"
-                                    id="studentNo"
-                                    value={stuNo}
-                                    onChange={(e) => setStuNo(e.target.value)}
-                                    label="Student No"
-                                >
-                                    {studentRegNo.map((studentReg, index) => (
-                                        <MenuItem key={index} value={studentReg}>{studentReg}</MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button type="submit" variant="contained" color="primary" fullWidth>
-                                Submit
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </form>
-            </Paper>
-        </Container>
+            </Grid>
+            <Grid container xs={10}>
+                <Grid item xs={4}>
+                </Grid>
+                <Grid item xs={4}>
+                </Grid>
+                <Grid item xs={4}>
+                    <TextField
+                        id="search"
+                        label="Search"
+                        variant="outlined"
+                        value={search}
+                        onChange={handleSearch}
+                        fullWidth
+                    />
+                </Grid>
+            </Grid>
+            <Grid item xs={10}>
+                <TableContainer component={Paper}>
+                    <Table aria-label="complaint table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Item Code</TableCell>
+                                <TableCell>Description</TableCell>
+                                <TableCell>Room No</TableCell>
+                                <TableCell>Student No</TableCell>
+                                <TableCell>Image URL</TableCell>
+                                <TableCell>Status</TableCell>
+                                <TableCell>Created At</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {data
+                                .filter((row) => {
+                                    if (search === '') {
+                                        return row;
+                                    } else if (
+                                        row.item_code.toLowerCase().includes(search.toLowerCase()) ||
+                                        row.description.toLowerCase().includes(search.toLowerCase()) ||
+                                        row.room_no.toString().includes(search.toLowerCase()) ||
+                                        row.stu_no.toLowerCase().includes(search.toLowerCase())
+                                    ) {
+                                        return row;
+                                    }
+                                })
+                                .map((row) => (
+                                    <TableRow key={row.id}>
+                                        <TableCell>{row.id}</TableCell>
+                                        <TableCell>{row.item_code}</TableCell>
+                                        <TableCell>{row.description}</TableCell>
+                                        <TableCell>{row.room_no}</TableCell>
+                                        <TableCell>{row.stu_no}</TableCell>
+                                        <TableCell>{row.image_url}</TableCell>
+                                        <TableCell>{row.status}</TableCell>
+                                        <TableCell>{row.createdAt}</TableCell>
+                                    </TableRow>
+                                ))}
+                        </TableBody>
+                        <TableFooter>
+                            <TableRow>
+                                <TablePagination
+                                    rowsPerPageOptions={[5, 10, 25]}
+                                    component="div"
+                                    count={data.length}
+                                    rowsPerPage={rowsPerPage}
+                                    page={page}
+                                    onPageChange={handleChangePage}
+                                    onRowsPerPageChange={handleChangeRowsPerPage}
+                                />
+                            </TableRow>
+                        </TableFooter>
+                    </Table>
+                </TableContainer>
+            </Grid>
+        </Grid>
     );
 }
 
-export default ComplaintForm;
+export default ShowComplaints

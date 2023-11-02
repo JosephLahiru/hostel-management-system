@@ -92,6 +92,8 @@ const ComplaintForm = () => {
 
         if (response.ok) {
             console.log('complaint submitted successfully');
+            //redirect to compaint page
+            window.location.href = 'http://localhost:3000/complaint';
         } else {
             console.error('Failed to submit complaint');
         }
@@ -155,18 +157,6 @@ const ComplaintForm = () => {
                                 disabled
                             />
                         </Grid>
-                        {/*<Grid item xs={12}>*/}
-                        {/*    <TextField*/}
-                        {/*        label="Student No"*/}
-                        {/*        value={stuNo}*/}
-                        {/*        onChange={(e) => setStuNo(e.target.value)}*/}
-                        {/*        fullWidth*/}
-                        {/*        margin="normal"*/}
-                        {/*        variant="outlined"*/}
-                        {/*        helperText="Please enter the Student Number"*/}
-                        {/*        required*/}
-                        {/*    />*/}
-                        {/*</Grid>*/}
                         <Grid item xs={12}>
                             <FormControl variant="outlined" fullWidth margin="normal" required>
                                 <InputLabel id="studentNo-label">Student No</InputLabel>

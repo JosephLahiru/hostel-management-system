@@ -14,7 +14,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -68,7 +67,10 @@ export default function SignInSide() {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <Typography component="h1" variant="h3" align='center'>
+              Hostal Management System
+            </Typography>
+            <Avatar sx={{ m: 1, bgcolor: '#1976D2' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">

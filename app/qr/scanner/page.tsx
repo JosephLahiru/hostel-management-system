@@ -1,25 +1,9 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import Html5QrcodePlugin, { Html5QrcodePluginProps } from './Html5QrcodePlugin'; // assuming Html5QrcodePlugin is in the same directory
+import React from 'react';
+import Html5QrcodePlugin, { Html5QrcodePluginProps } from './Html5QrcodePlugin';
+import {Grid, Typography} from '@mui/material';
 
 const QRScanner: React.FC<Html5QrcodePluginProps> = (props) => {
-    const useWindowDimensions = () => {
-        const [windowDimensions, setWindowDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
-
-        useEffect(() => {
-            const handleResize = () => {
-                setWindowDimensions({ width: window.innerWidth, height: window.innerHeight });
-            };
-
-            window.addEventListener("resize", handleResize);
-            return () => window.removeEventListener("resize", handleResize);
-        }, []);
-
-        return windowDimensions;
-    };
-
-
-    const { width, height } = useWindowDimensions();
     const onNewScanResult = (decodedText: string, decodedResult: any) => {
         // Check if the decoded text is a valid URL
         try {
@@ -33,15 +17,22 @@ const QRScanner: React.FC<Html5QrcodePluginProps> = (props) => {
     };
 
     return (
-        <div style={{ width, height }}>
-            <Html5QrcodePlugin
-                fps={30}
-                qrbox={{ width: 250, height: 250 }}
-                aspectRatio={1}
-                disableFlip={false}
-                qrCodeSuccessCallback={onNewScanResult}
-            />
-        </div>
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
+            <Grid item xs={12}>
+                <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                    Property QR Scanner
+                </Typography>
+            </Grid>
+            <Grid item xs={5}>
+                <Html5QrcodePlugin
+                    fps={30}
+                    qrbox={{ width: 250, height: 250 }}
+                    aspectRatio={1}
+                    disableFlip={false}
+                    qrCodeSuccessCallback={onNewScanResult}
+                />
+            </Grid>
+        </Grid>
     );
 };
 

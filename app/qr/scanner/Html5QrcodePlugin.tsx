@@ -56,8 +56,7 @@ const Html5QrcodePlugin: React.FC<Html5QrcodePluginProps> = (props) => {
     }, []);
 
     return (
-        //make height 100% match for display size with vh
-        <div id={qrcodeRegionId} style={{height: "100vh"}}/>
+        <div id={qrcodeRegionId}/>
     );
 };
 

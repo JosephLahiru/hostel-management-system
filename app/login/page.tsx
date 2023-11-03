@@ -19,7 +19,7 @@ function Copyright(props: any) {
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        HMS
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -51,7 +51,7 @@ export default function SignInSide() {
           sx={{
             backgroundImage: 'url(/images/background.jpg)',
             backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
+            backgroundColor: (t: any) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
             backgroundSize: 'cover',
             backgroundPosition: 'center',

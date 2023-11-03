@@ -11,9 +11,8 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.15",
-    "@mui/material": "^5.14.15",
-    "@types/react-qr-reader": "^2.1.6",
+    "@mui/icons-material": "^5.14.16",
+    "@mui/material": "^5.14.16",
     "googleapis": "^128.0.0",
     "html5-qrcode": "^2.3.8",
     "next": "^14.0.0",
@@ -21,7 +20,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-qr-code": "^2.0.12",
-    "react-qr-reader": "^3.0.0-beta-1"
+    "recharts": "^2.9.2"
   },
   "devDependencies": {
     "@types/node": "latest",

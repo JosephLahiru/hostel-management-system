@@ -99,14 +99,14 @@ const ShowComplaints: React.FC = () => {
                 </Typography>
             </Grid>
             <Grid container xs={10} spacing={2} justifyContent="center" alignItems="center">
-                <Grid item xs={2}>
+                <Grid item>
                     <Button type="submit" variant="outlined" color="success" fullWidth href={`${process.env.NEXT_PUBLIC_URL}/qr/scanner`} endIcon={<AddCircleIcon />}>
                         Add Complaint
                     </Button>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item sm={6} xs={2}>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={12} sm={4}>
                     <TextField
                         id="search"
                         label="Search"

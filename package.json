@@ -16,6 +16,7 @@
     "googleapis": "^128.0.0",
     "html5-qrcode": "^2.3.8",
     "next": "^14.0.0",
+    "next-auth": "^4.24.4",
     "qr-scanner": "^1.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

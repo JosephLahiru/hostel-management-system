@@ -20,7 +20,7 @@ const ComplaintForm = () => {
         if(searchParams.get('itemcode')){
             setItemCode(searchParams.get('itemcode')||'');
             const fetchStudents = async () => {
-                const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+                const authRes = await fetch(process.env.NEXT_PUBLIC_API + '/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ const ComplaintForm = () => {
 
                 const token = authData.jwt;
 
-                const res = await fetch(`https://hms.mtron.biz/api/studentRoom/${itemCode}`, {
+                const res = await fetch(process.env.NEXT_PUBLIC_API + `/api/studentRoom/${itemCode}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token,
@@ -45,7 +45,6 @@ const ComplaintForm = () => {
                 const studentData = await res.json();
                 if(studentData) {
                     const regNumbers = studentData.map((item: Student) => item.regNumber);
-                    console.log(regNumbers);
                     setStudentRegNo(regNumbers);
                     setRoomNo(studentData[0]?.roomNumber || '');
                 }
@@ -57,7 +56,7 @@ const ComplaintForm = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+        const authRes = await fetch(process.env.NEXT_PUBLIC_API + '/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +79,7 @@ const ComplaintForm = () => {
             image_url: imageUrl
         };
 
-        const response = await fetch('https://hms.mtron.biz/api/complaint', {
+        const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/complaint', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

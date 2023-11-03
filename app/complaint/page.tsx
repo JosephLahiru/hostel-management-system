@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Typography, TextField, TableFooter, TablePagination, Grid} from '@mui/material';
+import Button from "@mui/material/Button";
 
 interface ComplaintData {
     id: number;
@@ -69,10 +70,13 @@ const ShowComplaints: React.FC = () => {
                     Complaints
                 </Typography>
             </Grid>
-            <Grid container xs={10}>
-                <Grid item xs={4}>
+            <Grid container xs={10} spacing={2} justifyContent="center" alignItems="center">
+                <Grid item xs={2}>
+                    <Button type="submit" variant="outlined" color="success" fullWidth href={`http://localhost:3000/qr/scanner`}>
+                        Add Complaint
+                    </Button>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={6}>
                 </Grid>
                 <Grid item xs={4}>
                     <TextField

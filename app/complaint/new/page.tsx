@@ -93,7 +93,7 @@ const ComplaintForm = () => {
         if (response.ok) {
             console.log('complaint submitted successfully');
             //redirect to compaint page
-            window.location.href = 'http://localhost:3000/complaint';
+            window.location.href = `${process.env.NEXT_PUBLIC_URL}/complaint`;
         } else {
             console.error('Failed to submit complaint');
         }

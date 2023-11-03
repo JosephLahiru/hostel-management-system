@@ -2,6 +2,7 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Typography, TextField, TableFooter, TablePagination, Grid} from '@mui/material';
 import Button from "@mui/material/Button";
+import {width} from "@mui/system";
 
 interface ComplaintData {
     id: number;
@@ -11,7 +12,7 @@ interface ComplaintData {
     stu_no: string;
     image_url: string | null;
     status: string | null;
-    createdAt: string | null;
+    created_at: string | null;
 }
 
 const ShowComplaints: React.FC = () => {
@@ -106,6 +107,7 @@ const ShowComplaints: React.FC = () => {
                         </TableHead>
                         <TableBody>
                             {data
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .filter((row) => {
                                     if (search === '') {
                                         return row;
@@ -127,24 +129,20 @@ const ShowComplaints: React.FC = () => {
                                         <TableCell>{row.stu_no}</TableCell>
                                         <TableCell>{row.image_url}</TableCell>
                                         <TableCell>{row.status}</TableCell>
-                                        <TableCell>{row.createdAt}</TableCell>
+                                        <TableCell>{row.created_at ? new Date(row.created_at).toLocaleDateString('en-GB') : ''}</TableCell>
                                     </TableRow>
                                 ))}
                         </TableBody>
-                        <TableFooter>
-                            <TableRow>
-                                <TablePagination
-                                    rowsPerPageOptions={[5, 10, 25]}
-                                    component="div"
-                                    count={data.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    onPageChange={handleChangePage}
-                                    onRowsPerPageChange={handleChangeRowsPerPage}
-                                />
-                            </TableRow>
-                        </TableFooter>
                     </Table>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={data.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
                 </TableContainer>
             </Grid>
         </Grid>

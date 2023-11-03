@@ -67,7 +67,7 @@ const ShowComplaints: React.FC = () => {
         const authData = await authRes.json();
         const token = authData.jwt;
 
-        await fetch(process.env.NEXT_PUBLIC_API + '/api/complaint/${id', {
+        await fetch(process.env.NEXT_PUBLIC_API + `/api/complaint/${id}`, {
             method: 'PUT',
             headers: {
                 'Authorization': 'Bearer ' + token,

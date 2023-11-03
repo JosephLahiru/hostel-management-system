@@ -35,7 +35,7 @@ const ComplaintForm = () => {
 
                 const token = authData.jwt;
 
-                const res = await fetch(process.env.NEXT_PUBLIC_API + '/api/studentRoom/${itemCode}', {
+                const res = await fetch(process.env.NEXT_PUBLIC_API + `/api/studentRoom/${itemCode}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token,
@@ -45,7 +45,6 @@ const ComplaintForm = () => {
                 const studentData = await res.json();
                 if(studentData) {
                     const regNumbers = studentData.map((item: Student) => item.regNumber);
-                    console.log(regNumbers);
                     setStudentRegNo(regNumbers);
                     setRoomNo(studentData[0]?.roomNumber || '');
                 }

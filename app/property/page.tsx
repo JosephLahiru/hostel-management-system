@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import Search from '@mui/icons-material/Search';
 
 type Property = {
+  id: number;
   prop_id: string;
   prop_name: string;
   status: string;
@@ -86,7 +87,7 @@ function PropertyPage() {
           </TableHead>
           <TableBody>
             {loading ? (
-              Array(5).fill().map((_, i) => (
+              Array(5).fill(0).map((_, i) => (
                 <TableRow key={i}>
                   <TableCell><Skeleton /></TableCell>
                   <TableCell><Skeleton /></TableCell>

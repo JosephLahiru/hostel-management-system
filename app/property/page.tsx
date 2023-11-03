@@ -17,7 +17,7 @@ function PropertyPage() {
 
   useEffect(() => {
     async function fetchProperties() {
-      const authRes = await fetch('https://hms_api.mtron.biz/auth/login', {
+      const authRes = await fetch(process.env.NEXT_PUBLIC_API + '/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ function PropertyPage() {
 
       const token = authData.jwt;
   
-      const res = await fetch('https://hms_api.mtron.biz/api/property', {
+      const res = await fetch(process.env.NEXT_PUBLIC_API + '/api/property', {
         method: 'GET',
         headers: {
           'Authorization': 'Bearer ' + token,

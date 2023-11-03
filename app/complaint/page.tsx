@@ -28,7 +28,7 @@ const ShowComplaints: React.FC = () => {
     }, []);
 
     const fetchComplaints = async () => {
-        const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+        const authRes = await fetch('https://hms_api.mtron.biz/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const ShowComplaints: React.FC = () => {
         const authData = await authRes.json();
         const token = authData.jwt;
 
-        const res = await fetch('https://hms.mtron.biz/api/complaint', {
+        const res = await fetch('https://hms_api.mtron.biz/api/complaint', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + token,
@@ -53,7 +53,7 @@ const ShowComplaints: React.FC = () => {
         setData(complaintData);
     };
     const markAsResolved = async (id: number) => {
-        const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+        const authRes = await fetch('https://hms_api.mtron.biz/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const ShowComplaints: React.FC = () => {
         const authData = await authRes.json();
         const token = authData.jwt;
 
-        await fetch(`https://hms.mtron.biz/api/complaint/${id}`, {
+        await fetch(`https://hms_api.mtron.biz/api/complaint/${id}`, {
             method: 'PUT',
             headers: {
                 'Authorization': 'Bearer ' + token,

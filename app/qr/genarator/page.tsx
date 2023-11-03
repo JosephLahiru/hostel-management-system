@@ -44,7 +44,7 @@ const Generate: React.FC = () => {
 
     useEffect(() => {
         const fetchProperties = async () => {
-            const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+            const authRes = await fetch('https://hms_api.mtron.biz/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const Generate: React.FC = () => {
             const authData = await authRes.json();
             const token = authData.jwt;
 
-            const res = await fetch('https://hms.mtron.biz/api/property', {
+            const res = await fetch('https://hms_api.mtron.biz/api/property', {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token,

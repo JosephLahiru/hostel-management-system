@@ -4,6 +4,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import Search from '@mui/icons-material/Search';
 
 type Property = {
+  id: number;
   prop_id: string;
   prop_name: string;
   status: string;
@@ -16,7 +17,7 @@ function PropertyPage() {
 
   useEffect(() => {
     async function fetchProperties() {
-      const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+      const authRes = await fetch('https://hms_api.mtron.biz/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +32,7 @@ function PropertyPage() {
 
       const token = authData.jwt;
   
-      const res = await fetch('https://hms.mtron.biz/api/property', {
+      const res = await fetch('https://hms_api.mtron.biz/api/property', {
         method: 'GET',
         headers: {
           'Authorization': 'Bearer ' + token,
@@ -86,7 +87,7 @@ function PropertyPage() {
           </TableHead>
           <TableBody>
             {loading ? (
-              Array(5).fill().map((_, i) => (
+              Array(5).fill(0).map((_, i) => (
                 <TableRow key={i}>
                   <TableCell><Skeleton /></TableCell>
                   <TableCell><Skeleton /></TableCell>

@@ -1,25 +1,34 @@
 "use client";
-import React, {useEffect, useState} from 'react';
-import {Button, TextField, Container, Box, Grid, Typography, Paper} from '@mui/material';
-import { useSearchParams } from 'next/navigation';
-const ComplaintForm = () => {
-    const searchParams = useSearchParams();
-    const [description, setDescription] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
-    const [itemCode, setItemCode] = useState('');
-    const [roomNo, setRoomNo] = useState('');
-    const [stuNo, setStuNo] = useState('');
+import React, { useEffect, useState, ChangeEvent } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Typography, TextField, TableFooter, TablePagination, Grid} from '@mui/material';
+import Button from "@mui/material/Button";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import AddTaskIcon from '@mui/icons-material/AddTask';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+interface ComplaintData {
+    id: number;
+    item_code: string;
+    description: string;
+    room_no: number;
+    stu_no: string;
+    image_url: string | null;
+    status: string | null;
+    created_at: string | null;
+}
+
+const ShowComplaints: React.FC = () => {
+    const [data, setData] = useState<ComplaintData[]>([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
-        if(searchParams.get('itemcode')){
-            setItemCode(searchParams.get('itemcode')||'');
-        }
+        fetchComplaints();
     }, []);
 
-    const handleSubmit = async (event: React.FormEvent) => {
-        event.preventDefault();
-
-        const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+    const fetchComplaints = async () => {
+        const authRes = await fetch('https://hms_api.mtron.biz/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -31,114 +40,152 @@ const ComplaintForm = () => {
         });
 
         const authData = await authRes.json();
-
         const token = authData.jwt;
 
-        const data = {
-            item_code: itemCode,
-            description: description,
-            room_no: roomNo,
-            stu_no: stuNo,
-            image_url: imageUrl
-        };
+        const res = await fetch('https://hms_api.mtron.biz/api/complaint', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            },
+        });
 
-        const response = await fetch('https://hms.mtron.biz/api/complaint', {
+        const complaintData: ComplaintData[] = await res.json();
+        setData(complaintData);
+    };
+    const markAsResolved = async (id: number) => {
+        const authRes = await fetch('https://hms_api.mtron.biz/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
-
             },
-            body: JSON.stringify(data),
+            body: JSON.stringify({
+                username: process.env.NEXT_PUBLIC_USERNAME,
+                password: process.env.NEXT_PUBLIC_PASSWORD,
+            }),
         });
 
-        if (response.ok) {
-            console.log('complaint submitted successfully');
-        } else {
-            console.error('Failed to submit complaint');
-        }
+        const authData = await authRes.json();
+        const token = authData.jwt;
+
+        await fetch(`https://hms_api.mtron.biz/api/complaint/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            },
+        });
+
+        // Refresh the complaints data
+        fetchComplaints();
+    };
+
+    const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+        setSearch(event.target.value);
+    };
+
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
     };
 
     return (
-        <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
-            <Paper style={{ padding: '1rem' }}>
+        <Grid container spacing={2} justifyContent="center" alignItems="center">
+            <Grid item xs={12}>
                 <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
-                    Complaint Form
+                    Complaints
                 </Typography>
-                <form onSubmit={handleSubmit} noValidate autoComplete="off">
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the description"
-                                required
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Image URL"
-                                value={imageUrl}
-                                onChange={(e) => setImageUrl(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the Image URL"
-                                required
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Item Code"
-                                value={itemCode}
-                                onChange={(e) => setItemCode(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the Item Code"
-                                required
-                                disabled
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Room No"
-                                value={roomNo}
-                                onChange={(e) => setRoomNo(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the Room Number"
-                                required
-                                disabled
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Student No"
-                                value={stuNo}
-                                onChange={(e) => setStuNo(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the Student Number"
-                                required
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button type="submit" variant="contained" color="primary" fullWidth>
-                                Submit
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </form>
-            </Paper>
-        </Container>
+            </Grid>
+            <Grid container xs={10} spacing={2} justifyContent="center" alignItems="center">
+                <Grid item xs={2}>
+                    <Button type="submit" variant="outlined" color="success" fullWidth href={`${process.env.NEXT_PUBLIC_URL}/qr/scanner`} endIcon={<AddCircleIcon />}>
+                        Add Complaint
+                    </Button>
+                </Grid>
+                <Grid item xs={6}>
+                </Grid>
+                <Grid item xs={4}>
+                    <TextField
+                        id="search"
+                        label="Search"
+                        variant="outlined"
+                        value={search}
+                        onChange={handleSearch}
+                        fullWidth
+                    />
+                </Grid>
+            </Grid>
+            <Grid item xs={10}>
+                <TableContainer component={Paper}>
+                    <Table aria-label="complaint table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Item Code</TableCell>
+                                <TableCell>Description</TableCell>
+                                <TableCell>Room No</TableCell>
+                                <TableCell>Student No</TableCell>
+                                <TableCell>Image URL</TableCell>
+                                <TableCell>Status</TableCell>
+                                <TableCell>Created At</TableCell>
+                                <TableCell>Actions</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {data
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .filter((row) => {
+                                    if (search === '') {
+                                        return row;
+                                    } else if (
+                                        row.item_code.toLowerCase().includes(search.toLowerCase()) ||
+                                        row.description.toLowerCase().includes(search.toLowerCase()) ||
+                                        row.room_no.toString().includes(search.toLowerCase()) ||
+                                        row.stu_no.toLowerCase().includes(search.toLowerCase())
+                                    ) {
+                                        return row;
+                                    }
+                                })
+                                .map((row) => (
+                                    <TableRow key={row.id}>
+                                        <TableCell>{row.id}</TableCell>
+                                        <TableCell>{row.item_code}</TableCell>
+                                        <TableCell>{row.description}</TableCell>
+                                        <TableCell>{row.room_no}</TableCell>
+                                        <TableCell>{row.stu_no}</TableCell>
+                                        <TableCell>{row.image_url}</TableCell>
+                                        <TableCell>{row.status}</TableCell>
+                                        <TableCell>{row.created_at ? new Date(row.created_at).toLocaleDateString('en-GB') : ''}</TableCell>
+                                        <TableCell>
+                                            {row.status === "resolved" ? (
+                                                <Button variant="outlined" color="secondary" disabled endIcon={<CheckCircleOutlineIcon />}>
+                                                    Resolved
+                                                </Button>
+                                            ) : (
+                                                <Button variant="outlined" color="secondary" onClick={() => markAsResolved(row.id)} endIcon={<AddTaskIcon />}>
+                                                    Mark as Resolved
+                                                </Button>
+                                            )}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                        </TableBody>
+                    </Table>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={data.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </TableContainer>
+            </Grid>
+        </Grid>
     );
 }
 
-export default ComplaintForm;
+export default ShowComplaints

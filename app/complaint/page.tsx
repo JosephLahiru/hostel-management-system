@@ -73,7 +73,7 @@ const ShowComplaints: React.FC = () => {
             </Grid>
             <Grid container xs={10} spacing={2} justifyContent="center" alignItems="center">
                 <Grid item xs={2}>
-                    <Button type="submit" variant="outlined" color="success" fullWidth href={`http://localhost:3000/qr/scanner`}>
+                    <Button type="submit" variant="outlined" color="success" fullWidth href={`${process.env.NEXT_PUBLIC_URL}/qr/scanner`}>
                         Add Complaint
                     </Button>
                 </Grid>

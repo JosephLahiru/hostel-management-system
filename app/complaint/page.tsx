@@ -2,7 +2,9 @@
 import React, { useEffect, useState, ChangeEvent } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Typography, TextField, TableFooter, TablePagination, Grid} from '@mui/material';
 import Button from "@mui/material/Button";
-import {width} from "@mui/system";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import AddTaskIcon from '@mui/icons-material/AddTask';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 interface ComplaintData {
     id: number;
@@ -22,34 +24,59 @@ const ShowComplaints: React.FC = () => {
     const [search, setSearch] = useState('');
 
     useEffect(() => {
-        const fetchComplaints = async () => {
-            const authRes = await fetch('https://hms.mtron.biz/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: process.env.NEXT_PUBLIC_USERNAME,
-                    password: process.env.NEXT_PUBLIC_PASSWORD,
-                }),
-            });
-
-            const authData = await authRes.json();
-            const token = authData.jwt;
-
-            const res = await fetch('https://hms.mtron.biz/api/complaint', {
-                method: 'GET',
-                headers: {
-                    'Authorization': 'Bearer ' + token,
-                },
-            });
-
-            const complaintData: ComplaintData[] = await res.json();
-            setData(complaintData);
-        };
-
         fetchComplaints();
     }, []);
+
+    const fetchComplaints = async () => {
+        const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: process.env.NEXT_PUBLIC_USERNAME,
+                password: process.env.NEXT_PUBLIC_PASSWORD,
+            }),
+        });
+
+        const authData = await authRes.json();
+        const token = authData.jwt;
+
+        const res = await fetch('https://hms.mtron.biz/api/complaint', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            },
+        });
+
+        const complaintData: ComplaintData[] = await res.json();
+        setData(complaintData);
+    };
+    const markAsResolved = async (id: number) => {
+        const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: process.env.NEXT_PUBLIC_USERNAME,
+                password: process.env.NEXT_PUBLIC_PASSWORD,
+            }),
+        });
+
+        const authData = await authRes.json();
+        const token = authData.jwt;
+
+        await fetch(`https://hms.mtron.biz/api/complaint/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            },
+        });
+
+        // Refresh the complaints data
+        fetchComplaints();
+    };
 
     const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
         setSearch(event.target.value);
@@ -73,7 +100,7 @@ const ShowComplaints: React.FC = () => {
             </Grid>
             <Grid container xs={10} spacing={2} justifyContent="center" alignItems="center">
                 <Grid item xs={2}>
-                    <Button type="submit" variant="outlined" color="success" fullWidth href={`${process.env.NEXT_PUBLIC_URL}/qr/scanner`}>
+                    <Button type="submit" variant="outlined" color="success" fullWidth href={`${process.env.NEXT_PUBLIC_URL}/qr/scanner`} endIcon={<AddCircleIcon />}>
                         Add Complaint
                     </Button>
                 </Grid>
@@ -103,6 +130,7 @@ const ShowComplaints: React.FC = () => {
                                 <TableCell>Image URL</TableCell>
                                 <TableCell>Status</TableCell>
                                 <TableCell>Created At</TableCell>
+                                <TableCell>Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -130,6 +158,17 @@ const ShowComplaints: React.FC = () => {
                                         <TableCell>{row.image_url}</TableCell>
                                         <TableCell>{row.status}</TableCell>
                                         <TableCell>{row.created_at ? new Date(row.created_at).toLocaleDateString('en-GB') : ''}</TableCell>
+                                        <TableCell>
+                                            {row.status === "resolved" ? (
+                                                <Button variant="outlined" color="secondary" disabled endIcon={<CheckCircleOutlineIcon />}>
+                                                    Resolved
+                                                </Button>
+                                            ) : (
+                                                <Button variant="outlined" color="secondary" onClick={() => markAsResolved(row.id)} endIcon={<AddTaskIcon />}>
+                                                    Mark as Resolved
+                                                </Button>
+                                            )}
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                         </TableBody>

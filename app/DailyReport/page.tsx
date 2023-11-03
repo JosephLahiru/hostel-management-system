@@ -34,7 +34,7 @@ function DailyReport() {
   useEffect(() => {
     async function fetchDailyReport() {
       try {
-        const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+        const authRes = await fetch(process.env.NEXT_PUBLIC_API + '/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ function DailyReport() {
 
       const token = authData.jwt;
         // Fetch daily report data and set it in the state
-        const res = await fetch('https://hms.mtron.biz/api/daily_report', {
+        const res = await fetch(process.env.NEXT_PUBLIC_API + '/api/daily_report', {
           method: 'GET',
           headers: {
             'Authorization': 'Bearer ' + token,

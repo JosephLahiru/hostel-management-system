@@ -44,7 +44,7 @@ const Generate: React.FC = () => {
 
     useEffect(() => {
         const fetchProperties = async () => {
-            const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+            const authRes = await fetch(process.env.NEXT_PUBLIC_API + '/auth/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const Generate: React.FC = () => {
             const authData = await authRes.json();
             const token = authData.jwt;
 
-            const res = await fetch('https://hms.mtron.biz/api/property', {
+            const res = await fetch(process.env.NEXT_PUBLIC_API + '/api/property', {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -110,7 +110,7 @@ const Generate: React.FC = () => {
                                 <TableCell>{row.prop_name}</TableCell>
                                 <TableCell>{row.status}</TableCell>
                                 <TableCell>
-                                    <QRCode value={`http://localhost:3000/complaint?itemcode=${row.prop_id}`} size={100}/>
+                                    <QRCode value={`${process.env.NEXT_PUBLIC_URL}/complaint/new?itemcode=${row.prop_id}`} size={100}/>
                                 </TableCell>
                             </TableRow>
                         ))}

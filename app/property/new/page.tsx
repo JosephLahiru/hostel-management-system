@@ -26,7 +26,7 @@ function AddProperty() {
     event.preventDefault();
   
     // first, get the token
-    const authRes = await fetch('https://hms.mtron.biz/auth/login', {
+    const authRes = await fetch(process.env.NEXT_PUBLIC_API + '/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ function AddProperty() {
 
     const token = authData.jwt;
   
-    const res = await fetch('https://hms.mtron.biz/api/property', {
+    const res = await fetch(process.env.NEXT_PUBLIC_API + '/api/property', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

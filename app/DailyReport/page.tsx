@@ -1,33 +1,50 @@
 'use client'
-import { useState, useEffect, use } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Skeleton,
-  Typography,
-  Box,
-} from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Document, Page, Text, View, StyleSheet, Font, PDFViewer } from '@react-pdf/renderer';
 
 type Report = {
   complaint_id: string;
   description: string;
-  image_url: string;
-  item_code: string;
   item_name: string;
-  room_no: string;
-  hostel_type: string;
-  stu_no: string;
-  student_name: string;
   status: string;
-  complaint_created_date: string;
 };
 
-function DailyReport() {
+const styles = StyleSheet.create({
+  page: {
+    fontFamily: 'Roboto',
+    flexDirection: 'column',
+  },
+  content: {
+    padding: 20,
+  },
+  header: {
+    fontSize: 20,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  table: {
+    display: 'table',
+    width: '100%',
+  },
+  tableRow: {
+    flexDirection: 'row',
+  },
+  tableCol: {
+    width: '25%',
+    padding: 5,
+    border: '1px solid black',
+  },
+  tableHeader: {
+    width: '25%',
+    padding: 5,
+    fontWeight: 'bold',
+    border: '1px solid black',
+  },
+});
+
+Font.register({ family: 'Roboto', src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf' });
+
+const DailyReport = () => {
   const [dailyReport, setDailyReport] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -56,10 +73,14 @@ function DailyReport() {
           },
         });
 
+        console.log('API Response:', res);
+
         const data: Report[] = await res.json();
 
         setDailyReport(data);
         setLoading(false);
+
+    
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -69,59 +90,48 @@ function DailyReport() {
   }, []);
 
   return (
-    <Box sx={{ width: '80%', margin: 'auto' }}>
-      <Typography variant="h3" gutterBottom style={{ padding: "20px 0 20px 0" }}>
-        Daily Report
-      </Typography>
-      <hr />
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell><b>complaint_id</b></TableCell>
-              <TableCell><b>description</b></TableCell>
-              <TableCell><b>image_url</b></TableCell>
-              <TableCell><b>item_code</b></TableCell>
-              <TableCell><b>item_name</b></TableCell>
-              <TableCell><b>room_no</b></TableCell>
-              <TableCell><b>hostel_type</b></TableCell>
-              <TableCell><b>stu_no</b></TableCell>
-              <TableCell><b>student_name</b></TableCell>
-              <TableCell><b>status</b></TableCell>
-              <TableCell><b>complaint_created_date</b></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              Array(10).fill(null).map((_, i) => (
-                <TableRow key={i}>
-                  <TableCell><Skeleton /></TableCell>
-                  <TableCell><Skeleton /></TableCell>
-                  <TableCell><Skeleton /></TableCell>
-                </TableRow>
-              ))
-            ) : (
-              dailyReport.map((report) => (
-                <TableRow key={report.complaint_id}>
-                  <TableCell>{report.complaint_id}</TableCell>
-                  <TableCell>{report.description}</TableCell>
-                  <TableCell>{report.image_url}</TableCell>
-                  <TableCell>{report.item_code}</TableCell>
-                  <TableCell>{report.item_name}</TableCell>
-                  <TableCell>{report.room_no}</TableCell>
-                  <TableCell>{report.hostel_type}</TableCell>
-                  <TableCell>{report.stu_no}</TableCell>
-                  <TableCell>{report.student_name}</TableCell>
-                  <TableCell>{report.status}</TableCell>
-                  <TableCell>{report.complaint_created_date}</TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+    <Document>
+    <Page size="A4" style={styles.page}>
+      <View style={styles.content}>
+        <Text style={styles.header}>Daily Report</Text>
+        <View style={styles.table}>
+          <View style={styles.tableRow}>
+            <View style={styles.tableHeader}><Text>Complaint ID</Text></View>
+            <View style={styles.tableHeader}><Text>Description</Text></View>
+            <View style={styles.tableHeader}><Text>Item Name</Text></View>
+            <View style={styles.tableHeader}><Text>Status</Text></View>
+          </View>
+          {dailyReport.map((report) => (
+            <View style={styles.tableRow} key={report.complaint_id}>
+              <View style={styles.tableCol}><Text>{report.complaint_id}</Text></View>
+              <View style={styles.tableCol}><Text>{report.description}</Text></View>
+              <View style={styles.tableCol}><Text>{report.item_name}</Text></View>
+              <View style={styles.tableCol}><Text>{report.status}</Text></View>
+            </View>
+          ))}
+        </View>
+      </View>
+    </Page>
+  </Document>
   );
-}
+};
 
-export default DailyReport;
+const PDFView = () => {
+  const [client, setClient] = useState(false);
+
+  useEffect(() => {
+    setClient(true);
+  }, []);
+
+  if (client) {
+    return (
+      <PDFViewer>
+        <DailyReport />
+      </PDFViewer>
+    );
+  } else {
+    return <div>Loading...</div>;
+  }
+};
+
+export default PDFView;

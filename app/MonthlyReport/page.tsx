@@ -102,7 +102,13 @@ const MonthlyReport = () => {
             <View style={styles.tableHeader}><Text>Status</Text></View>
           </View>
           {monthlyReport.map((report) => (
-            <View style={styles.tableRow} key={report.complaint_id}>
+            <View
+            style={{
+              ...styles.tableRow,
+              backgroundColor: report.status === 'pending' ? 'pink' : 'white',
+            }}
+            key={report.complaint_id}
+          >
               <View style={styles.tableCol}><Text>{report.complaint_id}</Text></View>
               <View style={styles.tableCol}><Text>{report.description}</Text></View>
               <View style={styles.tableCol}><Text>{report.item_name}</Text></View>
@@ -125,7 +131,7 @@ const PDFView = () => {
 
   if (client) {
     return (
-      <PDFViewer>
+      <PDFViewer style={{width:"100%", height:"100vh"}}>
         <MonthlyReport />
       </PDFViewer>
     );

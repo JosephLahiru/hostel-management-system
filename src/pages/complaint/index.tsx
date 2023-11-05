@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import {AdminLayout} from "@layout";
 
 interface ComplaintData {
     id: number;
@@ -92,98 +93,100 @@ const ShowComplaints: React.FC = () => {
     };
 
     return (
-        <Grid container spacing={2} justifyContent="center" alignItems="center">
-            <Grid item xs={12}>
-                <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
-                    Complaints
-                </Typography>
-            </Grid>
-            <Grid container spacing={2} xs={10}>
-                <Grid item xs={12} sm={4}>
-                    <Button type="submit" variant="outlined" color="success" fullWidth href={`${process.env.NEXT_PUBLIC_URL}/qr/scanner`} endIcon={<AddCircleIcon />}>
-                        Add Complaint
-                    </Button>
+        <AdminLayout>
+            <Grid container spacing={2} justifyContent="center" alignItems="center">
+                <Grid item xs={12}>
+                    <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                        Complaints
+                    </Typography>
                 </Grid>
-                <Grid item xs={12} sm={8}>
-                    <Grid container justifyContent="flex-end">
-                        <TextField
-                            id="search"
-                            label="Search"
-                            variant="outlined"
-                            value={search}
-                            onChange={handleSearch}
-                        />
+                <Grid container spacing={2} xs={10}>
+                    <Grid item xs={12} sm={4}>
+                        <Button type="submit" variant="outlined" color="success" fullWidth href={`${process.env.NEXT_PUBLIC_URL}/qr/scanner`} endIcon={<AddCircleIcon />}>
+                            Add Complaint
+                        </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={8}>
+                        <Grid container justifyContent="flex-end">
+                            <TextField
+                                id="search"
+                                label="Search"
+                                variant="outlined"
+                                value={search}
+                                onChange={handleSearch}
+                            />
+                        </Grid>
                     </Grid>
                 </Grid>
+                <Grid item xs={10}>
+                    <TableContainer component={Paper}>
+                        <Table aria-label="complaint table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell>Item Code</TableCell>
+                                    <TableCell>Description</TableCell>
+                                    <TableCell>Room No</TableCell>
+                                    <TableCell>Student No</TableCell>
+                                    <TableCell>Image URL</TableCell>
+                                    <TableCell>Status</TableCell>
+                                    <TableCell>Created At</TableCell>
+                                    <TableCell>Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {data
+                                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    .filter((row) => {
+                                        if (search === '') {
+                                            return row;
+                                        } else if (
+                                            row.item_code.toLowerCase().includes(search.toLowerCase()) ||
+                                            row.description.toLowerCase().includes(search.toLowerCase()) ||
+                                            row.room_no.toString().includes(search.toLowerCase()) ||
+                                            row.stu_no.toLowerCase().includes(search.toLowerCase())
+                                        ) {
+                                            return row;
+                                        }
+                                    })
+                                    .map((row) => (
+                                        <TableRow key={row.id}>
+                                            <TableCell>{row.id}</TableCell>
+                                            <TableCell>{row.item_code}</TableCell>
+                                            <TableCell>{row.description}</TableCell>
+                                            <TableCell>{row.room_no}</TableCell>
+                                            <TableCell>{row.stu_no}</TableCell>
+                                            <TableCell>{row.image_url}</TableCell>
+                                            <TableCell>{row.status}</TableCell>
+                                            <TableCell>{row.created_at ? new Date(row.created_at).toLocaleDateString('en-GB') : ''}</TableCell>
+                                            <TableCell>
+                                                {row.status === "resolved" ? (
+                                                    <Button variant="outlined" color="secondary" disabled endIcon={<CheckCircleOutlineIcon />}>
+                                                        Resolved
+                                                    </Button>
+                                                ) : (
+                                                    <Button variant="outlined" color="secondary" onClick={() => markAsResolved(row.id)} endIcon={<AddTaskIcon />}>
+                                                        Mark as Resolved
+                                                    </Button>
+                                                )}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                            </TableBody>
+                        </Table>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            count={data.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </TableContainer>
+                </Grid>
             </Grid>
-            <Grid item xs={10}>
-                <TableContainer component={Paper}>
-                    <Table aria-label="complaint table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell>Item Code</TableCell>
-                                <TableCell>Description</TableCell>
-                                <TableCell>Room No</TableCell>
-                                <TableCell>Student No</TableCell>
-                                <TableCell>Image URL</TableCell>
-                                <TableCell>Status</TableCell>
-                                <TableCell>Created At</TableCell>
-                                <TableCell>Actions</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {data
-                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .filter((row) => {
-                                    if (search === '') {
-                                        return row;
-                                    } else if (
-                                        row.item_code.toLowerCase().includes(search.toLowerCase()) ||
-                                        row.description.toLowerCase().includes(search.toLowerCase()) ||
-                                        row.room_no.toString().includes(search.toLowerCase()) ||
-                                        row.stu_no.toLowerCase().includes(search.toLowerCase())
-                                    ) {
-                                        return row;
-                                    }
-                                })
-                                .map((row) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell>{row.id}</TableCell>
-                                        <TableCell>{row.item_code}</TableCell>
-                                        <TableCell>{row.description}</TableCell>
-                                        <TableCell>{row.room_no}</TableCell>
-                                        <TableCell>{row.stu_no}</TableCell>
-                                        <TableCell>{row.image_url}</TableCell>
-                                        <TableCell>{row.status}</TableCell>
-                                        <TableCell>{row.created_at ? new Date(row.created_at).toLocaleDateString('en-GB') : ''}</TableCell>
-                                        <TableCell>
-                                            {row.status === "resolved" ? (
-                                                <Button variant="outlined" color="secondary" disabled endIcon={<CheckCircleOutlineIcon />}>
-                                                    Resolved
-                                                </Button>
-                                            ) : (
-                                                <Button variant="outlined" color="secondary" onClick={() => markAsResolved(row.id)} endIcon={<AddTaskIcon />}>
-                                                    Mark as Resolved
-                                                </Button>
-                                            )}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                        </TableBody>
-                    </Table>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={data.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </TableContainer>
-            </Grid>
-        </Grid>
+        </AdminLayout>
     );
 }
 

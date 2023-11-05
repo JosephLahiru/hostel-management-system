@@ -9,6 +9,7 @@ import {
   Font,
   PDFViewer,
 } from "@react-pdf/renderer";
+import {AdminLayout} from "@layout";
 
 type Report = {
   complaint_id: string;
@@ -207,9 +208,11 @@ const PDFView = () => {
 
   if (client) {
     return (
-        <PDFViewer style={{ width: "100%", height: "100vh" }}>
-          <DailyReport />
-        </PDFViewer>
+        <AdminLayout>
+          <PDFViewer style={{ width: "100%", height: "100vh" }}>
+            <DailyReport />
+          </PDFViewer>
+        </AdminLayout>
     );
   } else {
     return <div>Loading...</div>;

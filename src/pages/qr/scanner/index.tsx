@@ -2,6 +2,7 @@
 import React from 'react';
 import Html5QrcodePlugin, { Html5QrcodePluginProps } from './Html5QrcodePlugin';
 import {Grid, Typography} from '@mui/material';
+import {AdminLayout} from "@layout";
 
 const QRScanner: React.FC<Html5QrcodePluginProps> = (props) => {
     const onNewScanResult = (decodedText: string, decodedResult: any) => {
@@ -17,22 +18,24 @@ const QRScanner: React.FC<Html5QrcodePluginProps> = (props) => {
     };
 
     return (
-        <Grid container spacing={2} justifyContent="center" alignItems="center">
-            <Grid item xs={12}>
-                <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
-                    Property QR Scanner
-                </Typography>
+        <AdminLayout>
+            <Grid container spacing={2} justifyContent="center" alignItems="center">
+                <Grid item xs={12}>
+                    <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                        Property QR Scanner
+                    </Typography>
+                </Grid>
+                <Grid item xs={5}>
+                    <Html5QrcodePlugin
+                        fps={30}
+                        qrbox={{ width: 250, height: 250 }}
+                        aspectRatio={1}
+                        disableFlip={false}
+                        qrCodeSuccessCallback={onNewScanResult}
+                    />
+                </Grid>
             </Grid>
-            <Grid item xs={5}>
-                <Html5QrcodePlugin
-                    fps={30}
-                    qrbox={{ width: 250, height: 250 }}
-                    aspectRatio={1}
-                    disableFlip={false}
-                    qrCodeSuccessCallback={onNewScanResult}
-                />
-            </Grid>
-        </Grid>
+        </AdminLayout>
     );
 };
 

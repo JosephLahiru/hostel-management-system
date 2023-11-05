@@ -1,8 +1,11 @@
 import React from 'react'
+import {AdminLayout} from "@layout";
 
 const NewUserPage = () => {
   return (
-    <div>NewUserPage</div>
+      <AdminLayout>
+        <div>NewUserPage</div>
+      </AdminLayout>
   )
 }
 

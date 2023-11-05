@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import QRCode from 'react-qr-code';
 import Container from "@mui/material/Container";
+import {AdminLayout} from "@layout";
 
 interface PropertyData {
     id: number;
@@ -79,54 +80,56 @@ const Generate: React.FC = () => {
     );
 
     return (
-        <Container maxWidth="lg" style={{ marginTop: '2rem' }}>
-            <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
-                Item QR Generator
-            </Typography>
-            <TextField
-                label="Search Properties"
-                variant="outlined"
-                value={search}
-                onChange={handleSearch}
-                style={{ marginBottom: '1rem'} }
-                sx={{ marginLeft: 'auto' }}
-            />
-            <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell>Property ID</TableCell>
-                            <TableCell>Property Name</TableCell>
-                            <TableCell>Status</TableCell>
-                            <TableCell>QR Code</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-                            <TableRow key={row.id}>
-                                <TableCell>{row.id}</TableCell>
-                                <TableCell>{row.prop_id}</TableCell>
-                                <TableCell>{row.prop_name}</TableCell>
-                                <TableCell>{row.status}</TableCell>
-                                <TableCell>
-                                    <QRCode value={`${process.env.NEXT_PUBLIC_URL}/complaint/new?itemcode=${row.prop_id}`} size={100}/>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={filteredData.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+        <AdminLayout>
+            <Container maxWidth="lg" style={{ marginTop: '2rem' }}>
+                <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                    Item QR Generator
+                </Typography>
+                <TextField
+                    label="Search Properties"
+                    variant="outlined"
+                    value={search}
+                    onChange={handleSearch}
+                    style={{ marginBottom: '1rem'} }
+                    sx={{ marginLeft: 'auto' }}
                 />
-            </TableContainer>
-        </Container>
+                <TableContainer component={Paper}>
+                    <Table aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Property ID</TableCell>
+                                <TableCell>Property Name</TableCell>
+                                <TableCell>Status</TableCell>
+                                <TableCell>QR Code</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
+                                <TableRow key={row.id}>
+                                    <TableCell>{row.id}</TableCell>
+                                    <TableCell>{row.prop_id}</TableCell>
+                                    <TableCell>{row.prop_name}</TableCell>
+                                    <TableCell>{row.status}</TableCell>
+                                    <TableCell>
+                                        <QRCode value={`${process.env.NEXT_PUBLIC_URL}/complaint/new?itemcode=${row.prop_id}`} size={100}/>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={filteredData.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                </TableContainer>
+            </Container>
+        </AdminLayout>
     );
 }
 export default Generate;

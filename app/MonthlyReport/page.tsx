@@ -4,8 +4,13 @@ import { Document, Page, Text, View, StyleSheet, Font, PDFViewer } from '@react-
 
 type Report = {
   complaint_id: string;
-  description: string;
+  complaint_created_date: string;
   item_name: string;
+  description: string;
+  hostel_type: string;
+  room_no: string;
+  stu_no: string;
+  student_name: string;
   status: string;
 };
 
@@ -26,6 +31,9 @@ const styles = StyleSheet.create({
     display: 'table',
     width: '100%',
   },
+  tableText: {
+    fontSize: 10,
+  },
   tableRow: {
     flexDirection: 'row',
   },
@@ -39,6 +47,8 @@ const styles = StyleSheet.create({
     padding: 5,
     fontWeight: 'bold',
     border: '1px solid black',
+    backgroundColor: 'lightgrey',
+    fontSize: 12,
   },
 });
 
@@ -97,8 +107,13 @@ const MonthlyReport = () => {
         <View style={styles.table}>
           <View style={styles.tableRow}>
             <View style={styles.tableHeader}><Text>Complaint ID</Text></View>
+            <View style={styles.tableHeader}><Text>Date</Text></View>
             <View style={styles.tableHeader}><Text>Description</Text></View>
             <View style={styles.tableHeader}><Text>Item Name</Text></View>
+            <View style={styles.tableHeader}><Text>Hostel Type</Text></View>
+            <View style={styles.tableHeader}><Text>Room No</Text></View>
+            <View style={styles.tableHeader}><Text>Student No</Text></View>
+            <View style={styles.tableHeader}><Text>Student Name</Text></View>
             <View style={styles.tableHeader}><Text>Status</Text></View>
           </View>
           {monthlyReport.map((report) => (
@@ -109,10 +124,15 @@ const MonthlyReport = () => {
             }}
             key={report.complaint_id}
           >
-              <View style={styles.tableCol}><Text>{report.complaint_id}</Text></View>
-              <View style={styles.tableCol}><Text>{report.description}</Text></View>
-              <View style={styles.tableCol}><Text>{report.item_name}</Text></View>
-              <View style={styles.tableCol}><Text>{report.status}</Text></View>
+              <View style={styles.tableCol}><Text style={styles.tableText}>{report.complaint_id}</Text></View>
+              <View style={styles.tableCol}><Text style={styles.tableText}>{report.complaint_created_date}</Text></View>
+              <View style={styles.tableCol}><Text style={styles.tableText}>{report.description}</Text></View>
+              <View style={styles.tableCol}><Text style={styles.tableText}>{report.item_name}</Text></View>
+              <View style={styles.tableCol}><Text style={styles.tableText}>{report.hostel_type}</Text></View>
+              <View style={styles.tableCol}><Text style={styles.tableText}>{report.room_no}</Text></View>
+              <View style={styles.tableCol}><Text style={styles.tableText}>{report.stu_no}</Text></View>
+              <View style={styles.tableCol}><Text style={styles.tableText}>{report.student_name}</Text></View>
+              <View style={styles.tableCol}><Text style={styles.tableText}>{report.status}</Text></View>
             </View>
           ))}
         </View>

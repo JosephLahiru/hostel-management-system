@@ -98,23 +98,22 @@ const ShowComplaints: React.FC = () => {
                     Complaints
                 </Typography>
             </Grid>
-            <Grid container xs={10} spacing={2} justifyContent="center" alignItems="center">
-                <Grid item>
+            <Grid container spacing={2} xs={10}>
+                <Grid item xs={12} sm={4}>
                     <Button type="submit" variant="outlined" color="success" fullWidth href={`${process.env.NEXT_PUBLIC_URL}/qr/scanner`} endIcon={<AddCircleIcon />}>
                         Add Complaint
                     </Button>
                 </Grid>
-                <Grid item sm={6} xs={2}>
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                    <TextField
-                        id="search"
-                        label="Search"
-                        variant="outlined"
-                        value={search}
-                        onChange={handleSearch}
-                        fullWidth
-                    />
+                <Grid item xs={12} sm={8}>
+                    <Grid container justifyContent="flex-end">
+                        <TextField
+                            id="search"
+                            label="Search"
+                            variant="outlined"
+                            value={search}
+                            onChange={handleSearch}
+                        />
+                    </Grid>
                 </Grid>
             </Grid>
             <Grid item xs={10}>

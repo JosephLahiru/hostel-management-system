@@ -36,10 +36,10 @@
     // Since we do not use prop-types
     "react/require-default-props": 0,
     // Use semicolon as member delimiter for interfaces and type
-    "@typescript-eslint/member-delimiter-style": 2,
+    "@typescript-eslint/member-delimiter-style": 0,
     "@typescript-eslint/semi": 0,
     "semi": [
-      2,
+      0,
       "never"
     ]
   }

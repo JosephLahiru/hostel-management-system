@@ -44,12 +44,12 @@ const styles = StyleSheet.create({
 
 Font.register({ family: 'Roboto', src: 'https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf' });
 
-const DailyReport = () => {
-  const [dailyReport, setDailyReport] = useState<Report[]>([]);
+const MonthlyReport = () => {
+  const [monthlyReport, setMonthlyReport] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchDailyReport() {
+    async function fetchMonthlyReport() {
       try {
         const authRes = await fetch(process.env.NEXT_PUBLIC_API + '/auth/login', {
         method: 'POST',
@@ -66,7 +66,7 @@ const DailyReport = () => {
 
       const token = authData.jwt;
         // Fetch daily report data and set it in the state
-        const res = await fetch(process.env.NEXT_PUBLIC_API + '/api/daily_report', {
+        const res = await fetch(process.env.NEXT_PUBLIC_API + '/api/monthly_report', {
           method: 'GET',
           headers: {
             'Authorization': 'Bearer ' + token,
@@ -77,7 +77,7 @@ const DailyReport = () => {
 
         const data: Report[] = await res.json();
 
-        setDailyReport(data);
+        setMonthlyReport(data);
         setLoading(false);
 
     
@@ -86,14 +86,14 @@ const DailyReport = () => {
       }
     }
 
-    fetchDailyReport();
+    fetchMonthlyReport();
   }, []);
 
   return (
     <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.content}>
-        <Text style={styles.header}>Daily Report</Text>
+        <Text style={styles.header}>Monthly Report</Text>
         <View style={styles.table}>
           <View style={styles.tableRow}>
             <View style={styles.tableHeader}><Text>Complaint ID</Text></View>
@@ -101,20 +101,20 @@ const DailyReport = () => {
             <View style={styles.tableHeader}><Text>Item Name</Text></View>
             <View style={styles.tableHeader}><Text>Status</Text></View>
           </View>
-          {dailyReport.map((report) => (
-              <View
-                style={{
-                  ...styles.tableRow,
-                  backgroundColor: report.status === 'pending' ? 'pink' : 'white',
-                }}
-                key={report.complaint_id}
-              >
-                <View style={styles.tableCol}><Text>{report.complaint_id}</Text></View>
-                <View style={styles.tableCol}><Text>{report.description}</Text></View>
-                <View style={styles.tableCol}><Text>{report.item_name}</Text></View>
-                <View style={styles.tableCol}><Text>{report.status}</Text></View>
-              </View>
-            ))}
+          {monthlyReport.map((report) => (
+            <View
+            style={{
+              ...styles.tableRow,
+              backgroundColor: report.status === 'pending' ? 'pink' : 'white',
+            }}
+            key={report.complaint_id}
+          >
+              <View style={styles.tableCol}><Text>{report.complaint_id}</Text></View>
+              <View style={styles.tableCol}><Text>{report.description}</Text></View>
+              <View style={styles.tableCol}><Text>{report.item_name}</Text></View>
+              <View style={styles.tableCol}><Text>{report.status}</Text></View>
+            </View>
+          ))}
         </View>
       </View>
     </Page>
@@ -132,7 +132,7 @@ const PDFView = () => {
   if (client) {
     return (
       <PDFViewer style={{width:"100%", height:"100vh"}}>
-        <DailyReport />
+        <MonthlyReport />
       </PDFViewer>
     );
   } else {

@@ -13,6 +13,7 @@ import {
     InputLabel
 } from '@mui/material';
 import {useRouter} from "next/router";
+import {AdminLayout} from "@layout";
 
 
 interface Student {
@@ -123,88 +124,90 @@ const ComplaintForm = () => {
     };
 
     return (
-        <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
-            <Paper style={{ padding: '1rem' }}>
-                <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
-                    Complaint Form
-                </Typography>
-                <form onSubmit={handleSubmit} noValidate autoComplete="off">
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Description"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the description"
-                                required
-                            />
+        <AdminLayout>
+            <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
+                <Paper style={{ padding: '1rem' }}>
+                    <Typography variant="h5" style={{ marginBottom: '1rem', textAlign: 'center' }}>
+                        Complaint Form
+                    </Typography>
+                    <form onSubmit={handleSubmit} noValidate autoComplete="off">
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <TextField
+                                    label="Description"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    fullWidth
+                                    margin="normal"
+                                    variant="outlined"
+                                    helperText="Please enter the description"
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    label="Image URL"
+                                    value={imageUrl}
+                                    onChange={(e) => setImageUrl(e.target.value)}
+                                    fullWidth
+                                    margin="normal"
+                                    variant="outlined"
+                                    helperText="Please enter the Image URL"
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    label="Item Code"
+                                    value={itemCode}
+                                    fullWidth
+                                    margin="normal"
+                                    variant="outlined"
+                                    helperText="Please enter the Item Code"
+                                    required
+                                    disabled
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    label="Room No"
+                                    value={roomNo}
+                                    fullWidth
+                                    margin="normal"
+                                    variant="outlined"
+                                    helperText="Please enter the Room Number"
+                                    required
+                                    disabled
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormControl variant="outlined" fullWidth margin="normal" required>
+                                    <InputLabel id="studentNo-label">Student No</InputLabel>
+                                    <Select
+                                        labelId="studentNo-label"
+                                        id="studentNo"
+                                        value={stuNo}
+                                        onChange={(e) => setStuNo(e.target.value)}
+                                        label="Student No"
+                                    >
+                                        {studentRegNo.map((studentReg, index) => (
+                                            <MenuItem key={index} value={studentReg}>
+                                                {studentReg}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Button type="submit" variant="contained" color="primary" fullWidth>
+                                    Submit
+                                </Button>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Image URL"
-                                value={imageUrl}
-                                onChange={(e) => setImageUrl(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the Image URL"
-                                required
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Item Code"
-                                value={itemCode}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the Item Code"
-                                required
-                                disabled
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Room No"
-                                value={roomNo}
-                                fullWidth
-                                margin="normal"
-                                variant="outlined"
-                                helperText="Please enter the Room Number"
-                                required
-                                disabled
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <FormControl variant="outlined" fullWidth margin="normal" required>
-                                <InputLabel id="studentNo-label">Student No</InputLabel>
-                                <Select
-                                    labelId="studentNo-label"
-                                    id="studentNo"
-                                    value={stuNo}
-                                    onChange={(e) => setStuNo(e.target.value)}
-                                    label="Student No"
-                                >
-                                    {studentRegNo.map((studentReg, index) => (
-                                        <MenuItem key={index} value={studentReg}>
-                                            {studentReg}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Button type="submit" variant="contained" color="primary" fullWidth>
-                                Submit
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </form>
-            </Paper>
-        </Container>
+                    </form>
+                </Paper>
+            </Container>
+        </AdminLayout>
     );
 };
 

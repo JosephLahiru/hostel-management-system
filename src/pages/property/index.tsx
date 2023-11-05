@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Skeleton, Typography, Box, TextField, InputAdornment } from '@mui/material';
 import Search from '@mui/icons-material/Search';
+import {AdminLayout} from "@layout";
 
 type Property = {
   id: number;

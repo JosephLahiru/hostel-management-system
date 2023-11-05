@@ -11,6 +11,7 @@ type Report = {
   stu_no: string;
   student_name: string;
   status: string;
+  complaint_created_date: string;
 };
 
 const styles = StyleSheet.create({
@@ -98,11 +99,19 @@ const DailyReport = () => {
     fetchDailyReport();
   }, []);
 
+  const formatReportDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  };
+
   return (
     <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.content}>
-        <Text style={styles.header}>Daily Report</Text>
+      <Text style={styles.header}>
+            {`Daily Report: ${formatReportDate(dailyReport[0]?.complaint_created_date)}`}
+          </Text>
         <View style={styles.table}>
           <View style={styles.tableRow}>
           <View style={styles.tableHeader}><Text>Complaint ID</Text></View>
@@ -122,7 +131,7 @@ const DailyReport = () => {
                 }}
                 key={report.complaint_id}
               >
-                <View style={styles.tableCol}><Text>{report.complaint_id}</Text></View>
+                <View style={styles.tableCol}><Text style={styles.tableText}>{report.complaint_id}</Text></View>
               <View style={styles.tableCol}><Text style={styles.tableText}>{report.description}</Text></View>
               <View style={styles.tableCol}><Text style={styles.tableText}>{report.item_name}</Text></View>
               <View style={styles.tableCol}><Text style={styles.tableText}>{report.hostel_type}</Text></View>

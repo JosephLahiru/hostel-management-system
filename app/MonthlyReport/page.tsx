@@ -103,7 +103,11 @@ const MonthlyReport = () => {
     <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.content}>
-        <Text style={styles.header}>Monthly Report</Text>
+      <Text style={styles.header}>
+            {monthlyReport.length > 0 &&
+              `Monthly Report - ${new Date(monthlyReport[0].complaint_created_date).toLocaleString('default', { month: 'long', year: 'numeric' })}`
+            }
+          </Text>
         <View style={styles.table}>
           <View style={styles.tableRow}>
             <View style={styles.tableHeader}><Text>Complaint ID</Text></View>

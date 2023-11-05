@@ -7,7 +7,6 @@ type HeaderProps = {
 }
 
 export default function Header(props: HeaderProps) {
-  const { toggleSidebar, toggleSidebarMd } = props
 
   return (
     <header className="header sticky-top mb-4 py-2 px-sm-2 border-bottom">
